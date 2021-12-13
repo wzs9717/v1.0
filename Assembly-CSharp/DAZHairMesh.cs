@@ -3,6 +3,7 @@ using System.Threading;
 using UnityEngine;
 
 public class DAZHairMesh : MonoBehaviour
+//hair core
 {
 	public class DAZHairMeshTaskInfo
 	{

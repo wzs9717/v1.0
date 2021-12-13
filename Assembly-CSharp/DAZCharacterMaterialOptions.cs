@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class DAZCharacterMaterialOptions : MaterialOptions
+//set skin material: texture, color, param
 {
 	[HideInInspector]
 	public Transform skinContainer;

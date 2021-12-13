@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MeshSmooth
+//smooth the skin
 {
 	private int numVertices;
 
@@ -128,6 +129,7 @@ public class MeshSmooth
 	}
 
 	public void HCCorrection(Vector3[] inVerts, Vector3[] outVerts, float beta, int startIndex = 0, int stopIndex = 1000000000)
+	//Heteroscedasticity-consistent
 	{
 		int num = numVertices - 1;
 		if (num > stopIndex)

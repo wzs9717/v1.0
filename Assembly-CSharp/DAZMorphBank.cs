@@ -4,6 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZMorphBank : MonoBehaviour
+// Morph core: apply, set, copy
 {
 	[SerializeField]
 	protected DAZMesh _connectedMesh;

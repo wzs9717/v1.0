@@ -8,6 +8,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZSkinV2 : MonoBehaviour
+// skin core
 {
 	public enum PhysicsType
 	{

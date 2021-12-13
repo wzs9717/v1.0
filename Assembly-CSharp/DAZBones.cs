@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DAZBones : MonoBehaviour
+//bones: get bone, init bones
 {
 	private Dictionary<string, DAZBone> boneNameToDAZBone;
 
@@ -113,7 +114,7 @@ public class DAZBones : MonoBehaviour
 			DAZBone component2 = item.GetComponent<DAZBone>();
 			if (component2 != null)
 			{
-				component2.Init();
+				component2.Init();//DAZBone init
 				if (boneNameToDAZBone.ContainsKey(component2.name))
 				{
 					Debug.LogError("Found duplicate bone " + component2.name);
@@ -128,9 +129,9 @@ public class DAZBones : MonoBehaviour
 				}
 				else
 				{
-					boneIdToDAZBone.Add(component2.id, component2);
+					boneIdToDAZBone.Add(component2.id, component2);//add to bones dic
 				}
-				InitBonesRecursive(component2.transform);
+				InitBonesRecursive(component2.transform);//Recursive
 			}
 		}
 	}

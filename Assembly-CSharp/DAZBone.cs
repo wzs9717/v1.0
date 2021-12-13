@@ -3,6 +3,7 @@ using SimpleJSON;
 using UnityEngine;
 
 public class DAZBone : JSONStorable
+//bone core
 {
 	protected const float geoScale = 0.01f;
 

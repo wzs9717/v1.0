@@ -4,6 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZMesh : MonoBehaviour
+//mesh core: draw, 
 {
 	protected const float geoScale = 0.01f;
 

@@ -2,6 +2,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZClothingItem : MonoBehaviour
+//connect skinWrap, mesh and autocollider to skin
 {
 	public string displayName;
 
@@ -34,6 +35,7 @@ public class DAZClothingItem : MonoBehaviour
 	}
 
 	protected void Connect()
+	//connect skinWrap, mesh and autocollider to skin
 	{
 		DAZSkinWrap[] componentsInChildren = GetComponentsInChildren<DAZSkinWrap>(includeInactive: true);
 		if (componentsInChildren != null && skin != null)

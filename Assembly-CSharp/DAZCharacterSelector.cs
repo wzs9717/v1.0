@@ -428,7 +428,7 @@ public class DAZCharacterSelector : JSONStorable
 				characterSelectorUIAlt.SetActiveCharacterToggle(_selectedCharacter.displayName);//set UIAlt
 			}
 			if (Application.isPlaying)
-			//pause depending on onCharacterLoadedFlag
+			//----------------------pause depending on onCharacterLoadedFlag
 			{
 				if (onCharacterLoadedFlag != null && !onCharacterLoadedFlag.flag)
 				{
@@ -496,6 +496,7 @@ public class DAZCharacterSelector : JSONStorable
 				}
 			}
 			DAZCharacter dAZCharacter = _selectedCharacter;
+			//register OnCharacterLoaded as last step
 			dAZCharacter.onLoadedHandlers = (DAZCharacter.OnLoaded)Delegate.Combine(dAZCharacter.onLoadedHandlers, new DAZCharacter.OnLoaded(OnCharacterLoaded));
 			_selectedCharacter.gameObject.SetActive(value: true);
 		}
@@ -873,6 +874,7 @@ public class DAZCharacterSelector : JSONStorable
 
 	public void InitCharacters()
 	{
+		//1. get female/male charactor
 		if (femaleCharactersContainer != null)
 		{
 			_femaleCharacters = femaleCharactersContainer.GetComponentsInChildren<DAZCharacter>(includeInactive: true);
@@ -889,6 +891,7 @@ public class DAZCharacterSelector : JSONStorable
 		{
 			_maleCharacters = new DAZCharacter[0];
 		}
+		//2. put them together into _characters
 		_characterByName = new Dictionary<string, DAZCharacter>();
 		_characters = new DAZCharacter[_femaleCharacters.Length + _maleCharacters.Length];
 		int num = 0;
@@ -903,6 +906,7 @@ public class DAZCharacterSelector : JSONStorable
 			num++;
 		}
 		DAZCharacter[] array = _characters;
+		//3. create dict _characters: {name,charactor}
 		foreach (DAZCharacter dAZCharacter in array)
 		{
 			if (!(dAZCharacter != null))
@@ -935,7 +939,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	protected void ConnectSkin()
-	//connect phical mesh with skin
+	//connect physical mesh with skin
 	{
 		DAZSkinV2 skin = _selectedCharacter.skin;
 		if (skin != null)
@@ -971,7 +975,7 @@ public class DAZCharacterSelector : JSONStorable
 						autoCollider.skin = skin;//connect _autoColliders with skin
 						if (morphBank1 != null)
 						{
-							autoCollider.morphBank1ForResizeTrigger = morphBank1;
+							autoCollider.morphBank1ForResizeTrigger = morphBank1;//set morphBank for ResizeTrigger of autoCollider
 						}
 						if (morphBank2 != null)
 						{
@@ -987,7 +991,7 @@ public class DAZCharacterSelector : JSONStorable
 				{
 					if (setAnchorFromVertex != null)
 					{
-						setAnchorFromVertex.skinTransform = skin.transform;
+						setAnchorFromVertex.skinTransform = skin.transform;//connect setAnchorFromVertex with skin
 						setAnchorFromVertex.skin = skin;
 					}
 				}
@@ -997,16 +1001,16 @@ public class DAZCharacterSelector : JSONStorable
 			{
 				if (dAZCharacterMaterialOptions != null)
 				{
-					dAZCharacterMaterialOptions.skin = skin;
+					dAZCharacterMaterialOptions.skin = skin;//set dAZCharacterMaterialOptions.skin
 				}
 			}
-			ConnectCharacterMaterialOptionsUI();
+			ConnectCharacterMaterialOptionsUI();// set its UI
 			DAZClothingItem[] array = clothingItems;
 			foreach (DAZClothingItem dAZClothingItem in array)
 			{
 				if (dAZClothingItem != null)
 				{
-					dAZClothingItem.skin = skin;
+					dAZClothingItem.skin = skin;//set dAZClothingItem
 				}
 			}
 			DAZHairGroup[] array2 = hairGroups;
@@ -1014,7 +1018,7 @@ public class DAZCharacterSelector : JSONStorable
 			{
 				if (dAZHairGroup != null)
 				{
-					dAZHairGroup.skin = skin;
+					dAZHairGroup.skin = skin;//set dAZClothingItem
 				}
 			}
 		}
@@ -1103,10 +1107,10 @@ public class DAZCharacterSelector : JSONStorable
 				dAZMesh.morphBank = morphBank2;
 			}
 		}
-		ConnectSkin();
+		ConnectSkin();//connect skin
 		if (activeMorphSet != null)
 		{
-			activeMorphSet.DAZMeshApplyTransform = _selectedCharacter.transform;
+			activeMorphSet.DAZMeshApplyTransform = _selectedCharacter.transform;//set transform
 			activeMorphSet.ApplySet();
 		}
 		SyncMaleAnatomy();
@@ -1118,6 +1122,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	public void InitClothingItems()
+	//get all clothing components and create something to use
 	{
 		if (maleClothingContainer != null)
 		{
@@ -1147,7 +1152,7 @@ public class DAZCharacterSelector : JSONStorable
 			_clothingItemNameToIndex.Add(dAZClothingItem.displayName, num);
 			if (dAZClothingItem.gameObject.activeSelf)
 			{
-				_activeClothingItems[num] = true;
+				_activeClothingItems[num] = true;//active clothingItems
 			}
 			_clothingItemsDisableMaleAnatomy[num] = dAZClothingItem.disableMaleAnatomy;
 			num++;
@@ -1230,6 +1235,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	public void SetActiveClothingItem(int index, bool active)
+	// Set Active ClothingItem
 	{
 		if (index >= 0 && index <= _activeClothingItems.Length)
 		{
@@ -1362,6 +1368,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	private void ConnectCharacterMaterialOptionsUI()
+	// set its UI
 	{
 		if (_selectedCharacter != null)
 		{
@@ -1435,6 +1442,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	public void InitComponents()
+	//get all kind of components in children
 	{
 		_physicsMeshes = GetComponentsInChildren<DAZPhysicsMesh>();
 		_autoColliderBatchUpdaters = rootBones.GetComponentsInChildren<AutoColliderBatchUpdater>();
@@ -1464,7 +1472,7 @@ public class DAZCharacterSelector : JSONStorable
 			wasInit = true;
 			if (Application.isPlaying)
 			{
-				activeMorphSet = base.gameObject.AddComponent<DAZMorphSet>();
+				activeMorphSet = base.gameObject.AddComponent<DAZMorphSet>();//add DAZMorphSet to gameobj, then we will get activeMorphSet
 			}
 			InitBones();
 			InitComponents();
@@ -1487,6 +1495,7 @@ public class DAZCharacterSelector : JSONStorable
 		if (_selectedCharacter != null)
 		{
 			DAZCharacter dAZCharacter = _selectedCharacter;
+			//register OnCharacterLoaded
 			dAZCharacter.onLoadedHandlers = (DAZCharacter.OnLoaded)Delegate.Combine(dAZCharacter.onLoadedHandlers, new DAZCharacter.OnLoaded(OnCharacterLoaded));
 		}
 	}
@@ -1499,7 +1508,7 @@ public class DAZCharacterSelector : JSONStorable
 			useAdvancedCollidersToggle.onValueChanged.AddListener(delegate
 			{
 				useAdvancedColliders = useAdvancedCollidersToggle.isOn;
-			});
+			});// listern to if useAdvancedCollidersToggle is cahnged
 		}
 		Init();
 		if (Application.isPlaying)

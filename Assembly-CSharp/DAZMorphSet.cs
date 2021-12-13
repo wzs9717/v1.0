@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DAZMorphSet : MonoBehaviour
+//set all morphs inside the mesh
 {
 	public string displayName;
 

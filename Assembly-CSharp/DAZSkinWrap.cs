@@ -4,6 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZSkinWrap : MonoBehaviour
+//??? dont understand, use GPU,  seems its a render
 {
 	[Serializable]
 	public struct SkinWrapVert
@@ -199,6 +200,7 @@ public class DAZSkinWrap : MonoBehaviour
 	}
 
 	public void Wrap()
+	//set _wrapVertices
 	{
 		if (!(dazMesh != null) || !(skin != null) || !(skin.dazMesh != null))
 		{

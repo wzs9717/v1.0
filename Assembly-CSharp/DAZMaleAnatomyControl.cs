@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class DAZMaleAnatomyControl : JSONStorable
+//Male reproductive system
 {
 	public AdjustJointSprings stiffnessSprings;
 

@@ -1,3 +1,4 @@
 
 *.cache
 *.editorconfig
+.DS_Store

@@ -3,6 +3,7 @@ using System.IO;
 namespace SimpleJSON
 {
 	public class JSONData : JSONNode
+	//can only serialise
 	{
 		private string m_Data;
 

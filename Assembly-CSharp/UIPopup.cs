@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIPopup : MonoBehaviour, ISelectHandler, IDeselectHandler, IEventSystemHandler
+//UI core
 {
 	public delegate void OnOpenPopup();
 

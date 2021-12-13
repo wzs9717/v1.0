@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 [ExecuteInEditMode]
 public class DAZCharacterSelector : JSONStorable
+//bone, morph, transform, cloth, hair, UI, physical mesh, colliders
 {
 	public enum Gender
 	{
@@ -249,11 +250,11 @@ public class DAZCharacterSelector : JSONStorable
 
 	public Text textureGroup5TextAlt;
 
-	private AutoColliderBatchUpdater[] _autoColliderBatchUpdaters;
+	private AutoColliderBatchUpdater[] _autoColliderBatchUpdaters;//AutoColliderBatchUpdater from all children
 
-	private AutoCollider[] _autoColliders;
+	private AutoCollider[] _autoColliders;//AutoCollider from all children
 
-	private DAZPhysicsMesh[] _physicsMeshes;
+	private DAZPhysicsMesh[] _physicsMeshes;//all meshes of all children
 
 	private SetAnchorFromVertex[] _setAnchorFromVertexComps;
 
@@ -320,6 +321,7 @@ public class DAZCharacterSelector : JSONStorable
 	public DAZCharacter[] characters => _characters;
 
 	public DAZCharacter selectedCharacter
+	//pause something, set UI
 	{
 		get
 		{
@@ -327,7 +329,7 @@ public class DAZCharacterSelector : JSONStorable
 		}
 		set
 		{
-			if (!(_selectedCharacter != value))
+			if (!(_selectedCharacter != value))//if _selectedCharacter==value
 			{
 				return;
 			}
@@ -341,6 +343,7 @@ public class DAZCharacterSelector : JSONStorable
 				_selectedCharacter.gameObject.SetActive(value: false);
 			}
 			if (Application.isPlaying)
+			//1.----------------------------pause all simulations-------------------
 			{
 				if (_physicsMeshes != null)
 				{
@@ -349,7 +352,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (dAZPhysicsMesh != null)
 						{
-							dAZPhysicsMesh.PauseSimulation();
+							dAZPhysicsMesh.PauseSimulation();//pause _physicsMeshes
 						}
 					}
 				}
@@ -360,7 +363,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (autoColliderBatchUpdater != null)
 						{
-							autoColliderBatchUpdater.PauseSimulation();
+							autoColliderBatchUpdater.PauseSimulation();//pause _autoColliderBatchUpdaters
 						}
 					}
 				}
@@ -371,7 +374,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (autoCollider != null && !autoCollider.allowBatchUpdate)
 						{
-							autoCollider.PauseSimulation();
+							autoCollider.PauseSimulation();//pause _autoColliders
 						}
 					}
 				}
@@ -382,7 +385,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (setAnchorFromVertex != null)
 						{
-							setAnchorFromVertex.PauseSimulation();
+							setAnchorFromVertex.PauseSimulation();//pause _setAnchorFromVertexComps
 						}
 					}
 				}
@@ -395,7 +398,7 @@ public class DAZCharacterSelector : JSONStorable
 						AutoCollider[] array = componentsInChildren;
 						foreach (AutoCollider autoCollider2 in array)
 						{
-							autoCollider2.PauseSimulation();
+							autoCollider2.PauseSimulation();//pause clothing AutoCollider
 						}
 					}
 				}
@@ -418,20 +421,21 @@ public class DAZCharacterSelector : JSONStorable
 			}
 			if (characterSelectorUI != null)
 			{
-				characterSelectorUI.SetActiveCharacterToggle(_selectedCharacter.displayName);
+				characterSelectorUI.SetActiveCharacterToggle(_selectedCharacter.displayName);//set UI
 			}
 			if (characterSelectorUIAlt != null)
 			{
-				characterSelectorUIAlt.SetActiveCharacterToggle(_selectedCharacter.displayName);
+				characterSelectorUIAlt.SetActiveCharacterToggle(_selectedCharacter.displayName);//set UIAlt
 			}
 			if (Application.isPlaying)
+			//pause depending on onCharacterLoadedFlag
 			{
 				if (onCharacterLoadedFlag != null && !onCharacterLoadedFlag.flag)
 				{
 					Debug.LogWarning("onCharacterLoadedFlag still set while trying to load another. Set to " + onCharacterLoadedFlag.name);
-					onCharacterLoadedFlag.flag = true;
+					onCharacterLoadedFlag.flag = true;//??
 				}
-				onCharacterLoadedFlag = new AsyncFlag();
+				onCharacterLoadedFlag = new AsyncFlag();//default false
 				onCharacterLoadedFlag.name = _selectedCharacter.displayName;
 				if (_physicsMeshes != null)
 				{
@@ -440,7 +444,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (dAZPhysicsMesh2 != null)
 						{
-							dAZPhysicsMesh2.PauseSimulation(onCharacterLoadedFlag);
+							dAZPhysicsMesh2.PauseSimulation(onCharacterLoadedFlag);//pause all children physical mesh if onCharacterLoadedFlag
 						}
 					}
 				}
@@ -451,7 +455,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (autoColliderBatchUpdater2 != null)
 						{
-							autoColliderBatchUpdater2.PauseSimulation(onCharacterLoadedFlag);
+							autoColliderBatchUpdater2.PauseSimulation(onCharacterLoadedFlag);//pause all children colliders if onCharacterLoadedFlag
 						}
 					}
 				}
@@ -462,7 +466,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (autoCollider3 != null && !autoCollider3.allowBatchUpdate)
 						{
-							autoCollider3.PauseSimulation(onCharacterLoadedFlag);
+							autoCollider3.PauseSimulation(onCharacterLoadedFlag);//... _autoColliders
 						}
 					}
 				}
@@ -473,7 +477,7 @@ public class DAZCharacterSelector : JSONStorable
 					{
 						if (setAnchorFromVertex2 != null)
 						{
-							setAnchorFromVertex2.PauseSimulation(onCharacterLoadedFlag);
+							setAnchorFromVertex2.PauseSimulation(onCharacterLoadedFlag);//...pause _setAnchorFromVertexComps
 						}
 					}
 				}
@@ -486,7 +490,7 @@ public class DAZCharacterSelector : JSONStorable
 						AutoCollider[] array2 = componentsInChildren2;
 						foreach (AutoCollider autoCollider4 in array2)
 						{
-							autoCollider4.PauseSimulation(onCharacterLoadedFlag);
+							autoCollider4.PauseSimulation(onCharacterLoadedFlag);//...pause dAZClothingItem AutoCollider
 						}
 					}
 				}
@@ -931,6 +935,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	protected void ConnectSkin()
+	//connect phical mesh with skin
 	{
 		DAZSkinV2 skin = _selectedCharacter.skin;
 		if (skin != null)
@@ -943,7 +948,7 @@ public class DAZCharacterSelector : JSONStorable
 					if (dAZPhysicsMesh != null)
 					{
 						dAZPhysicsMesh.skinTransform = skin.transform;
-						dAZPhysicsMesh.skin = skin;
+						dAZPhysicsMesh.skin = skin;//connect phical mesh with skin
 					}
 				}
 			}
@@ -952,7 +957,7 @@ public class DAZCharacterSelector : JSONStorable
 				AutoColliderBatchUpdater[] autoColliderBatchUpdaters = _autoColliderBatchUpdaters;
 				foreach (AutoColliderBatchUpdater autoColliderBatchUpdater in autoColliderBatchUpdaters)
 				{
-					autoColliderBatchUpdater.skin = skin;
+					autoColliderBatchUpdater.skin = skin;//connect _autoColliderBatchUpdaters with skin
 				}
 			}
 			if (_autoColliders != null)
@@ -963,7 +968,7 @@ public class DAZCharacterSelector : JSONStorable
 					if (autoCollider != null)
 					{
 						autoCollider.skinTransform = skin.transform;
-						autoCollider.skin = skin;
+						autoCollider.skin = skin;//connect _autoColliders with skin
 						if (morphBank1 != null)
 						{
 							autoCollider.morphBank1ForResizeTrigger = morphBank1;
@@ -1081,6 +1086,7 @@ public class DAZCharacterSelector : JSONStorable
 	}
 
 	protected void OnCharacterLoaded()
+	//connect morph, mesh and skin
 	{
 		DAZMesh[] componentsInChildren = _selectedCharacter.GetComponentsInChildren<DAZMesh>(includeInactive: true);
 		DAZMesh[] array = componentsInChildren;
@@ -1088,7 +1094,7 @@ public class DAZCharacterSelector : JSONStorable
 		{
 			if (morphBank1 != null && morphBank1.geometryId == dAZMesh.geometryId)
 			{
-				morphBank1.connectedMesh = dAZMesh;
+				morphBank1.connectedMesh = dAZMesh;//connect morph with mesh
 				dAZMesh.morphBank = morphBank1;
 			}
 			if (morphBank2 != null && morphBank2.geometryId == dAZMesh.geometryId)

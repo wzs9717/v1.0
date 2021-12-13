@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode]
 public class DAZCharacter : MonoBehaviour
+//LoadCharacter(skin, skin root bone)，load scene if no scene when became enabled
 {
 	public delegate void OnLoaded();
 
@@ -32,6 +33,7 @@ public class DAZCharacter : MonoBehaviour
 	public DAZSkinV2 skin => _skin;
 
 	protected void InitInstance()
+	//initialize the charactor to 0 position
 	{
 		characterInstance.parent = base.transform;
 		characterInstance.localPosition = Vector3.zero;
@@ -39,6 +41,7 @@ public class DAZCharacter : MonoBehaviour
 	}
 
 	protected void RegisterInstanceStorables()
+	//add js from child components to the JS list of Atom
 	{
 		if (containingAtom != null && characterInstance != null)
 		{
@@ -65,6 +68,7 @@ public class DAZCharacter : MonoBehaviour
 	}
 
 	protected void PostInitInstance()
+	//RestoreFromLast
 	{
 		if (containingAtom != null)
 		{
@@ -72,7 +76,7 @@ public class DAZCharacter : MonoBehaviour
 			JSONStorable[] array = componentsInChildren;
 			foreach (JSONStorable js in array)
 			{
-				containingAtom.RestoreFromLast(js);
+				containingAtom.RestoreFromLast(js);//???? restore what
 			}
 		}
 	}
@@ -81,7 +85,7 @@ public class DAZCharacter : MonoBehaviour
 	{
 		yield return null;
 		Scene sc = SceneManager.GetSceneByName(characterSceneName);
-		if (!sc.IsValid() || !sc.isLoaded)
+		if (!sc.IsValid() || !sc.isLoaded)//if no scene
 		{
 			async = SceneManager.LoadSceneAsync(characterSceneName, LoadSceneMode.Additive);
 			yield return async;
@@ -94,8 +98,8 @@ public class DAZCharacter : MonoBehaviour
 			{
 				GameObject gameObject = rootGameObjects[0];
 				characterInstance = Object.Instantiate(gameObject.transform);
-				characterInstance.gameObject.SetActive(value: true);
-				gameObject.SetActive(value: false);
+				characterInstance.gameObject.SetActive(value: true);//active instanced obj
+				gameObject.SetActive(value: false);//disable root obj??
 				InitInstance();
 				RegisterInstanceStorables();
 				OnLoadComplete();
@@ -109,6 +113,7 @@ public class DAZCharacter : MonoBehaviour
 	}
 
 	protected void OnLoadComplete()
+	//set skin, set root bone for skin
 	{
 		DAZSkinV2 dAZSkinV = GetComponentInChildren<DAZMergedSkinV2>(includeInactive: true);
 		DAZSkinV2 componentInChildren = GetComponentInChildren<DAZSkinV2>(includeInactive: true);
@@ -116,14 +121,14 @@ public class DAZCharacter : MonoBehaviour
 		{
 			dAZSkinV = componentInChildren;
 		}
-		_skin = dAZSkinV;
+		_skin = dAZSkinV;//get skin
 		if (rootBonesForSkinning != null)
 		{
 			DAZSkinV2[] componentsInChildren = GetComponentsInChildren<DAZSkinV2>(includeInactive: true);
 			DAZSkinV2[] array = componentsInChildren;
 			foreach (DAZSkinV2 dAZSkinV2 in array)
 			{
-				dAZSkinV2.root = rootBonesForSkinning;
+				dAZSkinV2.root = rootBonesForSkinning;//set skin root bone
 			}
 		}
 		DAZCharacterMaterialOptions[] componentsInChildren2 = GetComponentsInChildren<DAZCharacterMaterialOptions>();
@@ -135,11 +140,11 @@ public class DAZCharacter : MonoBehaviour
 		DAZSkinControl componentInChildren2 = GetComponentInChildren<DAZSkinControl>();
 		if (componentInChildren2 != null)
 		{
-			componentInChildren2.skin = _skin;
+			componentInChildren2.skin = _skin;//set skin
 		}
 		if (onLoadedHandlers != null)
 		{
-			onLoadedHandlers();
+			onLoadedHandlers();//call this delegate function 
 			onLoadedHandlers = null;
 		}
 	}
@@ -158,7 +163,7 @@ public class DAZCharacter : MonoBehaviour
 				InitInstance();
 				RegisterInstanceStorables();
 				OnLoadComplete();
-				PostInitInstance();
+				PostInitInstance();//why Restore From Last
 			}
 			else
 			{

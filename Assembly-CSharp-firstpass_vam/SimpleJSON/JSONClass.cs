@@ -7,6 +7,7 @@ using System.Linq;
 namespace SimpleJSON
 {
 	public class JSONClass : JSONNode, IEnumerable
+	//its a dic:{key,JsonNode} which can do add, remove and serialize
 	{
 		private Dictionary<string, JSONNode> m_Dict = new Dictionary<string, JSONNode>();
 

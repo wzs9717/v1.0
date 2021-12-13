@@ -2,6 +2,7 @@ using SimpleJSON;
 using UnityEngine;
 
 public class JSONStorable : MonoBehaviour
+//can get json with storedId
 {
 	public bool exclude;
 

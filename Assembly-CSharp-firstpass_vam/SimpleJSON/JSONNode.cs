@@ -6,6 +6,7 @@ using System.IO;
 namespace SimpleJSON
 {
 	public class JSONNode
+	//the core which has childs, parse from string to jsonNode, save/load
 	{
 		public virtual JSONNode this[int aIndex]
 		{
@@ -225,6 +226,7 @@ namespace SimpleJSON
 		}
 
 		public static JSONNode Parse(string aJSON)
+		//parse from string to JSONNode
 		{
 			Stack<JSONNode> stack = new Stack<JSONNode>();
 			JSONNode jSONNode = null;

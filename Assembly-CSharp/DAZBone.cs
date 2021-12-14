@@ -495,8 +495,8 @@ public class DAZBone : JSONStorable
 			}
 		}
 		base.transform.rotation = Quaternion.Euler(_morphedWorldOrientation);
-		_morphedLocalToWorldMatrix = base.transform.localToWorldMatrix;
-		_morphedWorldToLocalMatrix = base.transform.worldToLocalMatrix;
+		_morphedLocalToWorldMatrix = base.transform.localToWorldMatrix;// local space into world space 
+		_morphedWorldToLocalMatrix = base.transform.worldToLocalMatrix;// world space into local space 
 		if (useScale)
 		{
 			base.transform.position *= globalScale;
@@ -774,7 +774,7 @@ public class DAZBone : JSONStorable
 		if (!wasInit)
 		{
 			wasInit = true;
-			_changeFromOriginalMatrix = base.transform.localToWorldMatrix * _morphedWorldToLocalMatrix;
+			_changeFromOriginalMatrix = base.transform.localToWorldMatrix * _morphedWorldToLocalMatrix;//seems change back
 			_startingLocalPosition = base.transform.localPosition;
 			_startingLocalRotation = base.transform.localRotation;
 		}
@@ -787,7 +787,7 @@ public class DAZBone : JSONStorable
 
 	private void Update()
 	{
-		_changeFromOriginalMatrix = base.transform.localToWorldMatrix * _morphedWorldToLocalMatrix;
+		_changeFromOriginalMatrix = base.transform.localToWorldMatrix * _morphedWorldToLocalMatrix;//seems change back
 		_currentAnglesRadians = Quaternion2Angles.GetAngles(Quaternion.Inverse(_startingLocalRotation) * base.transform.localRotation, rotationOrder);
 		_currentAngles = _currentAnglesRadians * 57.29578f;
 	}

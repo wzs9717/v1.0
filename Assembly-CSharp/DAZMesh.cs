@@ -300,6 +300,7 @@ public class DAZMesh : MonoBehaviour
 	public DAZVertexMap[] baseVerticesToUVVertices => _baseVerticesToUVVertices;
 
 	public Dictionary<int, List<int>> baseVertToUVVertFullMap
+	//seems map morph to UV
 	{
 		get
 		{
@@ -308,7 +309,7 @@ public class DAZMesh : MonoBehaviour
 			{
 				List<int> list = new List<int>();
 				list.Add(i);
-				dictionary.Add(i, list);
+				dictionary.Add(i, list);//{i:[i],...}
 			}
 			for (int j = 0; j < _baseVerticesToUVVertices.Length; j++)
 			{
@@ -316,7 +317,7 @@ public class DAZMesh : MonoBehaviour
 				int tovert = _baseVerticesToUVVertices[j].tovert;
 				if (dictionary.TryGetValue(fromvert, out var value))
 				{
-					value.Add(tovert);
+					value.Add(tovert);//{fromvert,[fromvert,tovert],...}
 				}
 			}
 			return dictionary;
@@ -324,6 +325,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public Dictionary<int, int> uvVertToBaseVert
+	//map UV to morph, reverse of baseVertToUVVertFullMap
 	{
 		get
 		{
@@ -368,7 +370,7 @@ public class DAZMesh : MonoBehaviour
 			if (_usePatches != value)
 			{
 				_usePatches = value;
-				ApplyUVPatches();
+				ApplyUVPatches();//apply UVPatches, seems does not use in this file
 				RecalculateMorphedMeshTangents(forceAll: true);
 			}
 		}
@@ -418,6 +420,7 @@ public class DAZMesh : MonoBehaviour
 	public bool wasInit => _wasInit;
 
 	public void CopyMaterials()
+	//copy material from copyMaterialsFrom
 	{
 		if (copyMaterialsFrom != null)
 		{
@@ -447,6 +450,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public void ApplyUVPatches()
+	//apply UVPatches
 	{
 		for (int i = 0; i < _numUVVertices; i++)
 		{
@@ -520,6 +524,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public virtual void DeriveMeshes()
+	//create all mesh required things
 	{
 		_baseMesh = new Mesh();
 		_morphedBaseMesh = new Mesh();
@@ -1061,6 +1066,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public void StartMorph()
+	//set _verticesChangedLastFrame=~thisFrame, _verticesChangedThisFrame=false
 	{
 		_verticesChangedLastFrame = _verticesChangedThisFrame;
 		_visibleVerticesChangedLastFrame = _visibleVerticesChangedThisFrame;
@@ -1120,6 +1126,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public void ResetMorphedVertices()
+	//set _morphedUVVertices=_UVVertices, _morphedUVMappedMesh=_UVVertices
 	{
 		if (!_wasInit)
 		{
@@ -1158,6 +1165,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public void DrawMorphedUVMappedMesh(Matrix4x4 m)
+	//Draw MorphedUVMappedMesh with 1 pass with material3 or 2 passes with material1 and material2
 	{
 		MeshFilter component = GetComponent<MeshFilter>();
 		MeshRenderer component2 = GetComponent<MeshRenderer>();
@@ -1171,6 +1179,7 @@ public class DAZMesh : MonoBehaviour
 			return;
 		}
 		if (use2PassMaterials)
+		//draw 2 mesh with different materials,morphedUVMappedMesh is copied from copyMaterialsFrom
 		{
 			for (int i = 0; i < morphedUVMappedMesh.subMeshCount; i++)
 			{
@@ -1225,6 +1234,7 @@ public class DAZMesh : MonoBehaviour
 	}
 
 	public void Draw()
+	//draw baseMesh, _morphedBaseMesh, uvMappedMesh, _visibleMorphedUVMappedMesh, MorphedUVMappedMesh
 	{
 		if (!drawBaseMesh && !drawMorphedBaseMesh && !drawUVMappedMesh && !_drawMorphedUVMappedMesh && !_drawVisibleMorphedUVMappedMesh && !debugGrafting && (!drawInEditorWhenNotPlaying || Application.isPlaying))
 		{
@@ -1233,7 +1243,7 @@ public class DAZMesh : MonoBehaviour
 		Matrix4x4 matrix4x = base.transform.localToWorldMatrix;
 		if (Application.isPlaying && drawFromBone != null)
 		{
-			matrix4x *= drawFromBone.changeFromOriginalMatrix;
+			matrix4x *= drawFromBone.changeFromOriginalMatrix;//localToWorldMatrix * _morphedWorldToLocalMatrix
 		}
 		if (delayDisplayFrameCount == 2)
 		{
@@ -1263,14 +1273,15 @@ public class DAZMesh : MonoBehaviour
 			}
 		}
 		if (debugGrafting && meshGraft != null && (bool)graftTo)
+		//if need to graft
 		{
 			Vector3[] normals = baseMesh.normals;
 			DAZMeshGraftVertexPair[] vertexPairs = meshGraft.vertexPairs;
 			foreach (DAZMeshGraftVertexPair dAZMeshGraftVertexPair in vertexPairs)
 			{
-				Vector3 point = graftTo.morphedUVVertices[dAZMeshGraftVertexPair.graftToVertexNum];
+				Vector3 point = graftTo.morphedUVVertices[dAZMeshGraftVertexPair.graftToVertexNum];//from
 				Vector3 vector = matrix4x.MultiplyPoint(point);
-				Vector3 end = vector + normals[dAZMeshGraftVertexPair.vertexNum] * 0.01f;
+				Vector3 end = vector + normals[dAZMeshGraftVertexPair.vertexNum] * 0.01f;//target
 				Debug.DrawLine(vector, end, Color.red);
 			}
 		}

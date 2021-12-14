@@ -6,6 +6,7 @@ using UnityEngine;
 
 [Serializable]
 public class DAZMorph
+//one morph
 {
 	private const float geoScale = 0.01f;
 
@@ -65,6 +66,7 @@ public class DAZMorph
 	}
 
 	public DAZMorph(DAZMorph copyFrom)
+	//create morph by copying from  copyFrom
 	{
 		CopyParameters(copyFrom);
 		numDeltas = copyFrom.numDeltas;
@@ -86,6 +88,7 @@ public class DAZMorph
 	}
 
 	public void CopyParameters(DAZMorph copyFrom)
+	//copy all params
 	{
 		group = copyFrom.group;
 		region = copyFrom.region;
@@ -104,6 +107,7 @@ public class DAZMorph
 	}
 
 	private bool ProcessFormula(JSONNode fn, DAZMorphFormula formula, string morphName)
+	//process formula by parsing jsonNode
 	{
 		JSONNode jSONNode = fn["operations"];
 		string url = jSONNode[0]["url"];
@@ -152,6 +156,7 @@ public class DAZMorph
 	}
 
 	public void Import(JSONNode mn)
+	// import from JsonNode and initialize a morph: formulas, morphName, _morphValue, appliedValue, deltas, min, max, region...
 	{
 		morphName = mn["id"];
 		_morphValue = 0f;

@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class DAZMergedSkin : DAZSkin
+//seems no use, use V2
 {
 	public void Merge()
 	{

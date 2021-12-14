@@ -4,6 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZMergedMesh : DAZMesh
+//merge mesh 
 {
 	public enum GraftMethod
 	{
@@ -170,6 +171,7 @@ public class DAZMergedMesh : DAZMesh
 	}
 
 	public void CopyGraftOptions()
+	//copy from copyGraftOptionsFromMesh
 	{
 		if (copyGraftOptionsFromMesh != null)
 		{
@@ -197,7 +199,7 @@ public class DAZMergedMesh : DAZMesh
 
 	public override void DeriveMeshes()
 	{
-		base.DeriveMeshes();
+		base.DeriveMeshes();// create all mesh required things
 		_graftMovements = new Vector3[numGraftBaseVertices];
 		_graftMovements2 = new Vector3[numGraftBaseVertices];
 		if (hasGraft2)
@@ -1025,11 +1027,12 @@ public class DAZMergedMesh : DAZMesh
 		Vector3[] array3 = targetMesh.morphedBaseVertices;
 		int num = graftMesh.numUVVertices;
 		if (targetMesh.verticesChangedThisFrame || force)
+		//if the targetMesh changes or get any force, update 
 		{
 			Vector3[] array4 = targetMesh.morphedUVNormals;
 			for (int i = 0; i < numTargetBaseVertices; i++)
 			{
-				ref Vector3 reference = ref _morphedUVVertices[i];
+				ref Vector3 reference = ref _morphedUVVertices[i];//target Vertices->
 				reference = array[i];
 				ref Vector3 reference2 = ref _visibleMorphedUVVertices[i];
 				reference2 = array2[i];

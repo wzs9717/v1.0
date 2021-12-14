@@ -4,7 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class DAZMorphBank : MonoBehaviour
-// Morph core: apply, set, copy
+// MorphBank: apply, set and copy Morph
 {
 	[SerializeField]
 	protected DAZMesh _connectedMesh;
@@ -112,6 +112,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public Dictionary<string, List<DAZMorph>> morphsByRegion
+	//return _morphsByRegion, RebuildMorphsByRegion() if nothing 
 	{
 		get
 		{
@@ -124,6 +125,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public DAZMorph GetMorph(string morphName)
+	//set morph{name,morph}, get morph by name
 	{
 		if (_morphsByName == null)
 		{
@@ -141,9 +143,10 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void CopyMorph(DAZMorph dm)
+	//add dm to _morphs
 	{
 		DAZMorph morph = GetMorph(dm.morphName);
-		if (morph != null)
+		if (morph != null)//seems do nothing
 		{
 			morph.disable = dm.disable;
 			morph.visible = dm.visible;
@@ -165,6 +168,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void CopyMorphs()
+	//copy all morphs in copyMorphsFrom and RebuildMorphsByRegion()
 	{
 		if (!(copyMorphsFrom != null))
 		{
@@ -178,6 +182,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void RebuildMorphsByRegion()
+	//readd _morphs[i].region to _morphsByRegion and showRegion
 	{
 		_morphsByRegion = new Dictionary<string, List<DAZMorph>>();
 		showRegion = new Dictionary<string, bool>();
@@ -206,6 +211,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void MTTask(object info)
+	//ApplyMorphsThreaded()
 	{
 		DAZMorphTaskInfo dAZMorphTaskInfo = (DAZMorphTaskInfo)info;
 		while (_threadsRunning)
@@ -239,6 +245,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void StartThreads()
+	//start new thread to apply morph
 	{
 		if (!_threadsRunning)
 		{
@@ -255,6 +262,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void ApplyMorphsThreadedStart()
+	//set some params and init something
 	{
 		if (_morphs == null)
 		{
@@ -278,6 +286,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void ApplyMorphsThreaded()
+	//ApplyMorphs with thread, update threadedChangedMorphs, other parts are similar as nonthreaded way
 	{
 		bool flag = true;
 		int num = 5;
@@ -411,8 +420,11 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void ApplyMorphsThreadedFinish()
+	//postprocessing of ApplyMorphsThreaded
+	//for example: if ApplyMorphsThreaded change something, sync them; recalculate dirty bones
 	{
 		if (triggerThreadResetMorphs)
+		//reset morph and connected morph
 		{
 			ApplyMorphsInternal();
 			if (connectedMesh != null)
@@ -438,6 +450,7 @@ public class DAZMorphBank : MonoBehaviour
 			return;
 		}
 		if (threadedChangedMorphs != null)
+		//apply threadedChangedMorphs
 		{
 			for (int j = 0; j < numThreadedChangedMorphs; j++)
 			{
@@ -447,6 +460,7 @@ public class DAZMorphBank : MonoBehaviour
 			}
 		}
 		if (bonesDirty)
+		//recalculate morphBones and morph of connectedMesh 
 		{
 			if (morphBones != null)
 			{
@@ -492,10 +506,11 @@ public class DAZMorphBank : MonoBehaviour
 				reference6 = _threadedVisibleMorphedUVVertices[num];
 			}
 		}
-		connectedMesh.ApplyMorphVertices(visibleVerticesChanged);
+		connectedMesh.ApplyMorphVertices(visibleVerticesChanged);//apply morph to connectedMesh
 	}
 
 	protected void InitMorphs()
+	//set _morphs startValue
 	{
 		if (_morphs != null)
 		{
@@ -507,6 +522,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void ResetMorphs()
+	//ApplyMorphsInternal(),ZeroAllBoneMorphs()
 	{
 		if (useThreadedMorphing && Application.isPlaying)
 		{
@@ -529,6 +545,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void AddMorph(DAZMorph dm)
+	//add new morph to _morphs and RebuildMorphsByRegion() 
 	{
 		bool flag = false;
 		if (_morphs == null)
@@ -576,6 +593,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void RemoveMorph(string morphName)
+	////remove from _morphs
 	{
 		for (int i = 0; i < _morphs.Count; i++)
 		{
@@ -588,6 +606,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void RemoveMorph(int index)
+	//remove from _morphs
 	{
 		if (index < _morphs.Count && _morphs[index] != null)
 		{
@@ -604,6 +623,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void ApplyBoneMorphs(DAZBones bones, DAZMorph morph, bool zero = false)
+	//apply morph to fit bone, including Orientation and offeset. set all to 0 if zero
 	{
 		if (!(bones != null))
 		{
@@ -755,6 +775,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void ApplyAllBoneMorphs()
+	//Apply All BoneMorphs
 	{
 		for (int i = 0; i < _morphs.Count; i++)
 		{
@@ -773,6 +794,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void ZeroAllBoneMorphs()
+	//applay all morphBones offeset and orietation to 0
 	{
 		for (int i = 0; i < _morphs.Count; i++)
 		{
@@ -791,6 +813,8 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	protected void ApplyMorphsInternal(bool force = false)
+	//set values of target morph according to different morph types based on fomulas, (morphValue - appliedValue) and deltas 
+	//different type has different fomulas.
 	{
 		if (_morphs == null)
 		{
@@ -810,7 +834,7 @@ public class DAZMorphBank : MonoBehaviour
 			array2 = connectedMesh.rawMorphedUVVertices;
 			array3 = connectedMesh.visibleMorphedUVVertices;
 		}
-		while (flag2)
+		while (flag2)//repeat num times or appliedValue == morphValue
 		{
 			num--;
 			if (num == 0)
@@ -818,6 +842,8 @@ public class DAZMorphBank : MonoBehaviour
 				break;
 			}
 			flag2 = false;
+
+			//process morphs one by one
 			for (int i = 0; i < _morphs.Count; i++)
 			{
 				DAZMorph dAZMorph = _morphs[i];
@@ -827,6 +853,7 @@ public class DAZMorphBank : MonoBehaviour
 				}
 				float morphValue = dAZMorph.morphValue;
 				float appliedValue = dAZMorph.appliedValue;
+				//1.-----------------------morphValue type
 				if (appliedValue != morphValue)
 				{
 					DAZMorphFormula[] formulas = dAZMorph.formulas;
@@ -837,7 +864,7 @@ public class DAZMorphBank : MonoBehaviour
 							DAZMorph morph = GetMorph(dAZMorphFormula.target);
 							if (morph != null)
 							{
-								morph.morphValue = dAZMorphFormula.multiplier * morphValue;
+								morph.morphValue = dAZMorphFormula.multiplier * morphValue;//core
 								continue;
 							}
 							Debug.LogWarning(string.Concat("Could not find slave morph ", morph, " in morph ", dAZMorph.morphName));
@@ -845,16 +872,18 @@ public class DAZMorphBank : MonoBehaviour
 					}
 				}
 				if (enableMCMMorphs)
+				//Morph Corrective Morph, usually applied in eye closing
 				{
 					DAZMorphFormula[] formulas2 = dAZMorph.formulas;
 					foreach (DAZMorphFormula dAZMorphFormula2 in formulas2)
-					{
+					{	
+						//2. ----------------MCM type
 						if (dAZMorphFormula2.targetType == DAZMorphFormulaTargetType.MCM)
 						{
 							DAZMorph morph2 = GetMorph(dAZMorphFormula2.target);
 							if (morph2 != null)
 							{
-								dAZMorph.morphValue = morph2.morphValue * dAZMorphFormula2.multiplier;
+								dAZMorph.morphValue = morph2.morphValue * dAZMorphFormula2.multiplier;//core
 								morphValue = dAZMorph.morphValue;
 							}
 							else
@@ -863,12 +892,13 @@ public class DAZMorphBank : MonoBehaviour
 								morphValue = dAZMorph.morphValue;
 							}
 						}
+						//------------------------MCMMult type
 						else if (dAZMorphFormula2.targetType == DAZMorphFormulaTargetType.MCMMult)
 						{
 							DAZMorph morph3 = GetMorph(dAZMorphFormula2.target);
 							if (morph3 != null)
 							{
-								dAZMorph.morphValue *= morph3.morphValue;
+								dAZMorph.morphValue *= morph3.morphValue;//core
 								morphValue = dAZMorph.morphValue;
 							}
 							else
@@ -887,6 +917,7 @@ public class DAZMorphBank : MonoBehaviour
 				ApplyBoneMorphs(morphBones, dAZMorph);
 				ApplyBoneMorphs(morphBones2, dAZMorph);
 				if (dAZMorph.deltas.Length > 0 && connectedMesh != null && array2 != null)
+				//update Vertices if there are delta by delta+=delta*(morphValue - appliedValu)
 				{
 					flag = true;
 					if (dAZMorph.visible)
@@ -905,7 +936,7 @@ public class DAZMorphBank : MonoBehaviour
 							array2[dAZMorphVertex.vertex].z += dAZMorphVertex.delta.z * num2;
 							array[dAZMorphVertex.vertex].z = array2[dAZMorphVertex.vertex].z;
 							array3[dAZMorphVertex.vertex].z = array2[dAZMorphVertex.vertex].z;
-							if (dAZMorph.triggerNormalRecalc)
+							if (dAZMorph.triggerNormalRecalc)// its dirty, need to recalculate
 							{
 								connectedMesh.morphedBaseDirtyVertices[dAZMorphVertex.vertex] = true;
 								connectedMesh.morphedNormalsDirty = true;
@@ -917,7 +948,7 @@ public class DAZMorphBank : MonoBehaviour
 							}
 						}
 					}
-					else
+					else//if not visible, no need to update array3
 					{
 						float num3 = morphValue - appliedValue;
 						DAZMorphVertex[] deltas2 = dAZMorph.deltas;
@@ -945,7 +976,7 @@ public class DAZMorphBank : MonoBehaviour
 				dAZMorph.appliedValue = morphValue;
 			}
 		}
-		if (bonesDirty)
+		if (bonesDirty)//recalculate morphBones and connected morphs
 		{
 			if (morphBones != null)
 			{
@@ -964,6 +995,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void ApplyMorphs(bool force = false)
+	//StartMorph and ApplyMorphsInternal
 	{
 		if ((bool)connectedMesh && connectedMesh.wasInit)
 		{
@@ -976,6 +1008,7 @@ public class DAZMorphBank : MonoBehaviour
 	}
 
 	public void ApplyMorphsImmediate()
+	//only do ApplyMorphsThreadedFinish and ApplyMorphsThreadedStart if playing, otherwise ApplyMorphsInternal()
 	{
 		if (Application.isPlaying && useThreadedMorphing)
 		{
@@ -996,7 +1029,7 @@ public class DAZMorphBank : MonoBehaviour
 			applyMorphsTask.working = true;
 			applyMorphsTask.resetEvent.Set();
 			visibleVerticesChanged = true;
-			if (connectedMesh != null)
+			if (connectedMesh != null)//uppdate connected mesh
 			{
 				connectedMesh.ApplyMorphVertices(visibleVerticesChanged);
 			}
@@ -1014,18 +1047,18 @@ public class DAZMorphBank : MonoBehaviour
 			return;
 		}
 		connectedMesh.StartMorph();
-		if (Application.isPlaying && useThreadedMorphing)
+		if (Application.isPlaying && useThreadedMorphing)//Threaded applyMorph
 		{
 			StartThreads();
 			totalFrameCount++;
-			if (!applyMorphsTask.working)
+			if (!applyMorphsTask.working)//
 			{
 				ApplyMorphsThreadedFinish();
 				ApplyMorphsThreadedStart();
 				applyMorphsTask.working = true;
 				applyMorphsTask.resetEvent.Set();
 			}
-			else if (OVRManager.isHmdPresent)
+			else if (OVRManager.isHmdPresent)//ApplyMorphs should be finished quuickly
 			{
 				missedFrameCount++;
 				Debug.LogWarning("ApplyMorphsTask did not complete in 1 frame. Missed " + missedFrameCount + " out of total " + totalFrameCount);
@@ -1033,7 +1066,7 @@ public class DAZMorphBank : MonoBehaviour
 				DebugHUD.Alert2();
 			}
 		}
-		else
+		else//nonthreaded applyMorph
 		{
 			ApplyMorphsInternal();
 		}

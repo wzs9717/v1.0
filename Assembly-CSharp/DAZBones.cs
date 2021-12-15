@@ -44,6 +44,7 @@ public class DAZBones : MonoBehaviour
 	public bool wasInit => _wasInit;
 
 	public void SetGeneralScale(string morphName, float scale)
+	//seems no use
 	{
 		if (_morphGeneralScales == null)
 		{
@@ -61,12 +62,13 @@ public class DAZBones : MonoBehaviour
 		foreach (float value2 in _morphGeneralScales.Values)
 		{
 			float num = value2;
-			_currentGeneralScale += num;
+			_currentGeneralScale += num;//this var seems no use
 		}
 		SetMorphedTransform();
 	}
 
 	public DAZBone GetDAZBone(string boneName)
+	//GetDAZBoneByNmae
 	{
 		Init();
 		if (boneNameToDAZBone != null)
@@ -81,6 +83,7 @@ public class DAZBones : MonoBehaviour
 	}
 
 	public DAZBone GetDAZBoneById(string boneId)
+	//GetDAZBoneById
 	{
 		Init();
 		if (boneIdToDAZBone != null)
@@ -95,6 +98,7 @@ public class DAZBones : MonoBehaviour
 	}
 
 	public void Reset()
+	//init
 	{
 		_wasInit = false;
 		boneNameToDAZBone = null;
@@ -103,6 +107,7 @@ public class DAZBones : MonoBehaviour
 	}
 
 	private void InitBonesRecursive(Transform t)
+	//do DAZBone.init() Recursively to genrate boneNameToDAZBone and boneIdToDAZBone
 	{
 		foreach (Transform item in t)
 		{
@@ -137,6 +142,7 @@ public class DAZBones : MonoBehaviour
 	}
 
 	public void Init()
+	//InitBonesRecursive and SetMorphedTransform to init dazBones
 	{
 		if (!_wasInit || boneNameToDAZBone == null)
 		{
@@ -151,6 +157,7 @@ public class DAZBones : MonoBehaviour
 	}
 
 	public void SetTransformsToImportValues()
+	//seems no use
 	{
 		if (dazBones != null)
 		{
@@ -163,6 +170,7 @@ public class DAZBones : MonoBehaviour
 	}
 
 	public void SetMorphedTransform()
+	//detach bones, apply morphed transform and attach them again
 	{
 		float x = base.transform.lossyScale.x;
 		if (dazBones != null)
@@ -172,7 +180,7 @@ public class DAZBones : MonoBehaviour
 				DAZBone[] array = dazBones;
 				foreach (DAZBone dAZBone in array)
 				{
-					dAZBone.SaveTransform();
+					dAZBone.SaveTransform();//backup
 				}
 			}
 			DAZBone[] array2 = dazBones;

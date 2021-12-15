@@ -27,6 +27,7 @@ public class JSONStorable : MonoBehaviour
 	}
 
 	public virtual JSONClass GetJSON(bool includePhysical = true, bool includeAppearance = true)
+	//return JSONClass with {'id':storeId}
 	{
 		JSONClass jSONClass = new JSONClass();
 		jSONClass["id"] = storeId;

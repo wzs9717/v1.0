@@ -161,6 +161,7 @@ public class DAZBone : JSONStorable
 	public bool isTransformDirty => transformDirty;
 
 	public override JSONClass GetJSON(bool includePhysical = true, bool includeAppearance = true)
+	//serialize position and rotation into JsonClass
 	{
 		JSONClass jSON = base.GetJSON(includePhysical, includeAppearance);
 		if (includePhysical)
@@ -193,6 +194,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public override void RestoreFromJSON(JSONClass jc, bool restorePhysical = true, bool restoreAppearance = true)
+	//restore position and rotation from JsonClass
 	{
 		Init();
 		base.RestoreFromJSON(jc, restorePhysical, restoreAppearance);
@@ -279,6 +281,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void ImportNode(JSONNode jn, bool isMale)
+	//restore RotationOrder, _worldPosition and _worldOrientation of bone
 	{
 		_id = jn["id"];
 		foreach (JSONNode item in jn["center_point"].AsArray)
@@ -392,6 +395,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void Rotate(Vector3 rotationToUse)
+	//apply rotation according to RotationOrder
 	{
 		switch (rotationOrder)
 		{
@@ -429,6 +433,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void ApplyOffsetTransform()
+	//change from world position to bones position
 	{
 		if (dazBones != null)
 		{
@@ -437,6 +442,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void SetTransformToImportValues()
+	//change from world position to bones position
 	{
 		if (!Application.isPlaying)
 		{
@@ -447,12 +453,14 @@ public class DAZBone : JSONStorable
 	}
 
 	public void ApplyPresetLocalTransforms()
+	//Apply Preset position and rotation transform
 	{
 		base.transform.localPosition += presetLocalTranslation;
 		Rotate(presetLocalRotation);
 	}
 
 	public void SetImportValuesToTransform()
+	//seems no use
 	{
 		if (!Application.isPlaying)
 		{
@@ -470,6 +478,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void SetMorphedTransform(bool useScale, float globalScale)
+	//update morph position and orientation by _morphOffsets
 	{
 		transformDirty = false;
 		if (disableMorph)
@@ -504,12 +513,14 @@ public class DAZBone : JSONStorable
 	}
 
 	public void SaveTransform()
+	//save position and rotation
 	{
 		saveBonePosition = base.transform.position;
 		saveBoneRotation = base.transform.rotation;
 	}
 
 	public void RestoreTransform()
+	//restore from saveBonePosition and saveBonePosition
 	{
 		if (disableMorph)
 		{
@@ -525,7 +536,7 @@ public class DAZBone : JSONStorable
 			{
 				component2.SetTargetPositionFromPercent();
 			}
-		}
+		} 
 		else
 		{
 			AdjustRotationTarget component3 = GetComponent<AdjustRotationTarget>();
@@ -537,6 +548,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void SaveAndDetachParent()
+	//save and backup base.transform.parent 
 	{
 		if (!disableMorph)
 		{
@@ -546,6 +558,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void RestoreParent()
+	//restore from saveParent
 	{
 		if (!disableMorph)
 		{
@@ -560,11 +573,13 @@ public class DAZBone : JSONStorable
 	}
 
 	public void ResetScale()
+	//set scale to 1
 	{
 		base.transform.localScale = Vector3.one;
 	}
 
 	public void DetachJoint()
+	//delete connectedBody and backup to saveConnectedBody
 	{
 		if (!disableMorph)
 		{
@@ -579,6 +594,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void AttachJoint()
+	//set connectedBody, connectedAnchor, JointPositionHardLimit
 	{
 		ConfigurableJoint component = GetComponent<ConfigurableJoint>();
 		if (didDetachJoint)
@@ -600,6 +616,7 @@ public class DAZBone : JSONStorable
 	}
 
 	private void InitMorphOffsets()
+	//create _morphOffsets
 	{
 		if (_morphOffsets == null)
 		{
@@ -612,6 +629,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void SetBoneXOffset(string morphName, float xoffset)
+	//set xoffset to morphName , create morphName if doesnt found
 	{
 		InitMorphOffsets();
 		Vector3 value = zeroVector;
@@ -684,6 +702,7 @@ public class DAZBone : JSONStorable
 	}
 
 	public void SetBoneOrientationXOffset(string morphName, float xoffset)
+	//set xoffset Orientation to morphName , create morphName if doesnt found
 	{
 		InitMorphOffsets();
 		Vector3 value = zeroVector;
@@ -760,11 +779,13 @@ public class DAZBone : JSONStorable
 	}
 
 	public Vector3 GetAngles()
+	//_currentAnglesRadians
 	{
 		return _currentAnglesRadians;
 	}
 
 	public Vector3 GetAnglesDegrees()
+	//_currentAngles
 	{
 		return _currentAngles;
 	}

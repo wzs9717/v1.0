@@ -634,7 +634,7 @@ public class DAZMorphBank : MonoBehaviour
 		{
 			switch (dAZMorphFormula.targetType)
 			{
-			case DAZMorphFormulaTargetType.GeneralScale:
+			case DAZMorphFormulaTargetType.GeneralScale://seems no use
 				if (zero)
 				{
 					bones.SetGeneralScale(morph.morphName, 0f);

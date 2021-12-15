@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class JointPositionHardLimit : MonoBehaviour
+//HardLimit move from startAnchor+_zeroTargetPosition to startAnchor+TargetPosition
 {
 	public bool lateUpdateOn;
 
@@ -97,10 +98,11 @@ public class JointPositionHardLimit : MonoBehaviour
 	}
 
 	public void SetTargetPositionFromPercent()
+	//set target position for cj.connectedAnchor to move towards _highTargetPosition
 	{
 		if (_percent < 0f)
 		{
-			_currentTargetPosition = Vector3.Lerp(_zeroTargetPosition, _lowTargetPosition, 0f - _percent);
+			_currentTargetPosition = Vector3.Lerp(_zeroTargetPosition, _lowTargetPosition, 0f - _percent);//interpolate
 		}
 		else
 		{
@@ -112,17 +114,18 @@ public class JointPositionHardLimit : MonoBehaviour
 			base.transform.localRotation = startRotation;
 			cj.connectedAnchor = startAnchor + _currentTargetPosition;
 			_currentAnchor = cj.connectedAnchor;
-			base.transform.localRotation = localRotation;
+			base.transform.localRotation = localRotation;//seems restore base.transform.localRotation
 		}
 	}
 
 	private void Start()
+	//init ConfigurableJoint, set target posion and then update localPosition
 	{
 		cj = GetComponent<ConfigurableJoint>();
 		if (cj != null)
 		{
 			startAnchor = cj.connectedAnchor;
-			cj.autoConfigureConnectedAnchor = false;
+			cj.autoConfigureConnectedAnchor = false;//manully config connected anchor
 			startRotation = base.transform.localRotation;
 		}
 		SetTargetPositionFromPercent();
@@ -130,6 +133,7 @@ public class JointPositionHardLimit : MonoBehaviour
 	}
 
 	private void DoUpdate()
+	//set localPosition to cj.connectedAnchor
 	{
 		if (cj != null)
 		{

@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class AdjustRotationTarget : MonoBehaviour
+//hardLimit rotate from _zeroTargetRotation to TargetRotation
 {
 	public bool on = true;
 
@@ -303,6 +304,7 @@ public class AdjustRotationTarget : MonoBehaviour
 	}
 
 	public void Adjust()
+	//set localRotation to _currentTargetRotation
 	{
 		if (on && Application.isPlaying)
 		{

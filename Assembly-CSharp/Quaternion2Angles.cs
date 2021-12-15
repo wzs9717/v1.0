@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class Quaternion2Angles
+//Quaternion to angles according to RotationOrder
 {
 	public enum RotationOrder
 	{

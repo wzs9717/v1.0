@@ -1423,6 +1423,7 @@ public class DAZSkinV2 : MonoBehaviour
 	}
 
 	public void InitSkinTimes()
+	//
 	{
 		threadSkinTime = new float[_numSubThreads];
 		threadSkinVertsCount = new int[_numSubThreads];

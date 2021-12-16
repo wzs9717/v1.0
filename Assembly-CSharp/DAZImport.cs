@@ -7,7 +7,7 @@ using SimpleJSON;
 using UnityEngine;
 
 public class DAZImport : MonoBehaviour
-//seems core and used at the begining of the game
+//seems core and used at the begining of the game, but no use
 {
 	protected const float geoScale = 0.01f;
 

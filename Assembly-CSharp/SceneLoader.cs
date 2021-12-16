@@ -75,6 +75,7 @@ public class SceneLoader : MonoBehaviour
 	public Text keyEntryStatus;
 
 	public void AddKey()
+	//add key
 	{
 		if (sceneCheckFile == null || !(sceneCheckFile != string.Empty) || !(keyInputField != null))
 		{
